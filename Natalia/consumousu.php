@@ -5,12 +5,12 @@ $url = "http://localhost:8080/usuarios";
 $consumo = file_get_contents($url);
 
 if ($consumo === FALSE) {
-    die("Error al consumir el servicio web.");
+    die("Error al consumir el servicio.");
 }
 
 $usuarios = json_decode($consumo);
 
-//Tiene que ingresar un correo y contraseña que esten registrados
+//Tiene que ingresar un correo y contraseña que esten registrados en la bd
     $correoIngresado = readline("Ingrese su correo: ");
     $passwordIngresado = readline("Ingrese su contraseña: ");
 
@@ -20,7 +20,7 @@ $usuarios = json_decode($consumo);
 foreach ($usuarios as $usuario) {
     if ($usuario->usuCorreo === $correoIngresado && $usuario->usuPassword === $passwordIngresado) {
         $autenticado = true;
-        echo "Bienvenido, " . $usuario->usuNombre . "\n";
+        echo "Bienvenid@, " . $usuario->usuNombre . "\n";
         echo "-------------------------\n";
 
         
@@ -39,7 +39,7 @@ foreach ($usuarios as $usuario) {
 }
 
 if (!$autenticado) {
-    echo "Correo o contraseña incorrectos. Acceso denegado.\n";
+    echo "Correo o contraseña incorrectos.\n";
 }
 
 ?>
