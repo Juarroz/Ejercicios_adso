@@ -35,7 +35,6 @@ if ($clave == $claveIngreso) {
             echo $role->rolNombre . "\n";
         }
 
-    // --- Opción 2: Agregar un Rol Nuevo ---
     } elseif ($opcion == "2") {
         
         $url = "http://localhost:8080/roles";
@@ -44,7 +43,7 @@ if ($clave == $claveIngreso) {
         $datos = array(
             'rolNombre' => $nuevoRol,
         );
-
+        
         $data_json = json_encode($datos);
         
         $proceso = curl_init($url);
@@ -65,7 +64,6 @@ if ($clave == $claveIngreso) {
         }
         curl_close($proceso);
 
-        // CORRECCIÓN: Se aceptan los códigos 200 (OK) y 201 (Created) como éxito.
         if ($http_code == 201 || $http_code == 200){
             echo "Rol guardado correctamente (Respuesta: $http_code).\n";
             

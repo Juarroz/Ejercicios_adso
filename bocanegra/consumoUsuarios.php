@@ -7,14 +7,14 @@ if ($claveIngresada == $claveSecreta) {
 
     echo "Clave correcta. Acceso concedido.\n\n";
 
-     echo "Seleccione la opción que desea ejecutar:\n";
+    echo "Seleccione la opción que desea ejecutar:\n";
     echo "1. Listar Usuarios\n";
     echo "2. Agregar Nuevo Usuario\n";
     echo "3. Listar Roles\n";
     echo "4. Listar Tipos de Documento\n";
     $opcion = readline("Digite su opción (1, 2, 3 o 4): ");
 
-      if ($opcion == "1") {
+    if ($opcion == "1") {
 
         $url = "http://localhost:8080/usuarios";
         $consumo = file_get_contents($url);
@@ -38,24 +38,24 @@ if ($claveIngresada == $claveSecreta) {
             echo $usuario->usuNombre . " (Rol: " . $usuario->rol->rolNombre . ")\n";
         }
 
-     } elseif ($opcion == "2") {
+    } elseif ($opcion == "2") {
 
         $url = "http://localhost:8080/usuarios";
 
-         echo "\n--- Creación de Nuevo Usuario ---\n";
+        echo "\n--- Creación de Nuevo Usuario ---\n";
         $nombre = readline("Ingrese Nombre Completo: ");
         $correo = readline("Ingrese Correo Electrónico: ");
         $password = readline("Ingrese Contraseña: ");
- 
-         $datos = array(
+
+        $datos = array(
             'usuNombre' => $nombre,
             'usuCorreo' => $correo,
             'usuPassword' => $password,
-             'usuOrigen' => 'registro',
+            'usuOrigen' => 'registro',
             'usuActivo' => true,
-         );
+        );
 
-         $data_json = json_encode($datos);
+        $data_json = json_encode($datos);
         $proceso = curl_init($url);
         
         curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "POST");
@@ -69,18 +69,18 @@ if ($claveIngresada == $claveSecreta) {
         if (curl_errno($proceso)) { die("Error en la petición Post: " . curl_error($proceso) . "\n"); }
         curl_close($proceso);
 
-         if ($http_code == 201) {  
+        if ($http_code == 201) {  
             echo "Usuario guardado correctamente (Respuesta: 201).\n";
         } else {
             echo "Error en el servidor (Respuesta: $http_code).\n";
             echo "Mensaje del servidor: " . $respuestaServidor . "\n";
         }
 
-     } elseif ($opcion == "3") {
- 
-     } elseif ($opcion == "4") {
- 
-     } else {
+    } elseif ($opcion == "3") {
+
+    } elseif ($opcion == "4") {
+
+    } else {
         echo "Opción no válida. Por favor, ejecute el script de nuevo.\n";
     }
 
