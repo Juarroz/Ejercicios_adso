@@ -1,6 +1,7 @@
 <?php
+include 'Config/url.php';
 
-$url = "http://localhost:8081/usuarios";
+$url = $URL_USUARIOS;
 
 $consumo = file_get_contents($url);
 
