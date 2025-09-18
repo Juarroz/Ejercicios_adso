@@ -1,10 +1,10 @@
 <?php
 
-$url = "http://localhost:8080/pedidos";
+$url = "http://localhost:8081/pedidos";
 
 $consumo = file_get_contents($url);
 
-    if ($consumo === FALSE) {
+if ($consumo === FALSE) {
         die("Error al consumir el servicio web.");
 }
 
@@ -39,3 +39,54 @@ foreach ($pedidos as $pedido) {
 if (!$encontrado) {
     echo "No se encontraron pedidos con el estado ingresado.\n";
 }
+
+$respuesta = readline ("¿Desea agregar un nuevo pedido? (s) para si y (n) para no: ");
+ 
+if ($respuesta === 's') {
+    $nuevocodigo = readline("Ingrese el codigo del pedido: ");
+    $nuevafecha = readline("Ingrese la fecha del pedido: ");
+    $nuevocomentario = readline("Ingrese el nuevo comentario: ");
+    $nuevoestado = readline("Ingrese el estado de su pedido (1:diseño, 2:tallado, 3:engaste, 4:pulido, 5:finalizado): ");
+    $nuevapersonalizacion = readline("Ingrese el id de su personalizacion: ");
+    $nuevousu = readline("Ingrese el id del usuario relacionado: ");
+
+    $datos = array(
+        'pedCodigo' => $nuevocodigo,
+        'pedFechaCreacion' => date('Y-m-d'),
+        'pedComentarios' => $nuevocomentario,
+        'estId' => $nuevoestado,
+        'perId' => $nuevapersonalizacion,
+        'usuId' => $nuevousu
+    );
+    
+
+    $datos_json = json_encode($datos);
+
+    $proceso = curl_init($url);
+
+    curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($proceso, CURLOPT_POSTFIELDS, $datos_json);
+    curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($proceso, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($datos_json))
+    );
+
+    $respuestapet = curl_exec($proceso);
+
+    $http_code = curl_getinfo($proceso, CURLINFO_HTTP_CODE);
+
+    if(curl_errno($proceso)) {
+        die('Error en la petición: ' . curl_error($proceso));
+    }
+
+    curl_close($proceso);
+
+    if($http_code == 200) {
+        echo "Pedido agregado exitosamente.\n";
+    } else {
+        echo "Error al agregar el pedido. Código de respuesta HTTP: " . $http_code . "\n";
+    }
+}   
+
+?>
