@@ -1,5 +1,5 @@
 <?php
-include 'Config/url.php';
+include __DIR__ . '/../Config/url.php';
 
 $url = $URL_OPCIONES_PERSONALIZACION;
 
