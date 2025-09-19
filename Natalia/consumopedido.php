@@ -93,7 +93,88 @@ if ($respuesta === 's') {
     }
 }  
 
-//put
+// put
+
+$respuesta = readline("¿Desea actualizar un pedido? (s) para sí y (n) para no: ");
+
+if ($respuesta === 's') {
+    $id = readline("Ingrese el ID del pedido a actualizar: ");
+    $nuevocodigo = readline("Ingrese el nuevo código del pedido: ");
+    $nuevocomentario = readline("Ingrese el nuevo comentario: ");
+    $nuevoestado = readline("Ingrese el nuevo estado (1:diseño, 2:tallado, 3:engaste, 4:pulido, 5:finalizado): ");
+    $nuevapersonalizacion = readline("Ingrese el id de la nueva personalización: ");
+    $nuevousu = readline("Ingrese el id del usuario relacionado: ");
+
+    $fechaActual = date('Y-m-d\TH:i:s');
+
+    $datos = array(
+        'pedCodigo' => $nuevocodigo,
+        'pedComentarios' => $nuevocomentario,
+        'pedFechaCreacion' => $fechaActual,
+        'estId' => $nuevoestado,
+        'perId' => $nuevapersonalizacion,
+        'usuId' => $nuevousu
+    );
+
+    $datos_json = json_encode($datos);
+
+    $proceso = curl_init($url . "/" . $id);
+
+    curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "PUT");
+    curl_setopt($proceso, CURLOPT_POSTFIELDS, $datos_json);
+    curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($proceso, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($datos_json))
+    );
+
+    $respuestapet = curl_exec($proceso);
+
+    $http_code = curl_getinfo($proceso, CURLINFO_HTTP_CODE);
+
+    if (curl_errno($proceso)) {
+        die('Error en la petición: ' . curl_error($proceso));
+    }
+
+    curl_close($proceso);
+
+    if ($http_code == 200) {
+        echo "Pedido actualizado exitosamente.\n";
+    } else {
+        echo "Error al actualizar el pedido. Código de respuesta HTTP: " . $http_code . "\n";
+    }
+}
+
+
+// delete
+
+$respuesta = readline("¿Desea eliminar un pedido? (s) para sí y (n) para no: ");
+
+if ($respuesta === 's') {
+    $id = readline("Ingrese el ID del pedido a eliminar: ");
+
+    $proceso = curl_init($url . "/" . $id);
+
+    curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
+
+    $respuestapet = curl_exec($proceso);
+
+    $http_code = curl_getinfo($proceso, CURLINFO_HTTP_CODE);
+
+    if (curl_errno($proceso)) {
+        die('Error en la petición: ' . curl_error($proceso));
+    }
+
+    curl_close($proceso);
+
+    if ($http_code == 200) {
+        echo "Pedido eliminado exitosamente.\n";
+    } else {
+        echo "Error al eliminar el pedido. Código de respuesta HTTP: " . $http_code . "\n";
+    }
+}
+
 
 
 ?>
