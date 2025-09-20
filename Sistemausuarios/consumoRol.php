@@ -16,7 +16,7 @@ if ($clave == $claveIngreso) {
     $opcion = readline("Digite su opción (1, 2, 3 o 4): ");
 
     if ($opcion == "1") {
-        $consumo = file_get_contents(URL_ROLES);
+        $consumo = file_get_contents($URL_ROLES);
 
         if ($consumo === false) { die("Error: no se puede consumir el servicio."); }
         $roles = json_decode($consumo);
@@ -33,7 +33,7 @@ if ($clave == $claveIngreso) {
         $datos = array('rolNombre' => $nuevoRol);
         $data_json = json_encode($datos);
         
-        $proceso = curl_init(URL_ROLES);
+        $proceso = curl_init($URL_ROLES);
         curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($proceso, CURLOPT_POSTFIELDS, $data_json);
         curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
@@ -53,7 +53,7 @@ if ($clave == $claveIngreso) {
         $rolId = readline("Ingrese el ID del rol que desea actualizar: ");
         $nuevoNombre = readline("Ingrese el nuevo nombre para el rol: ");
 
-        $url = URL_ROLES . '/' . $rolId;  
+        $url = $URL_ROLES . '/' . $rolId;  
         $datos = array('rolNombre' => $nuevoNombre);
         $data_json = json_encode($datos);
 
@@ -75,7 +75,7 @@ if ($clave == $claveIngreso) {
 
     } elseif ($opcion == "4") {
         $rolId = readline("Ingrese el ID del rol que desea eliminar: ");
-        $url = URL_ROLES . '/' . $rolId;  
+        $url = $URL_ROLES . '/' . $rolId;  
 
         $proceso = curl_init($url);
         curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "DELETE");

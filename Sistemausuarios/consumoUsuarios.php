@@ -1,6 +1,6 @@
 <?php
 
-require_once 'config/urls.php';
+require_once 'Config/url.php';
 
 $claveSecreta = "admin123";
 $claveIngresada = readline("Por favor, ingrese la clave para continuar: ");
@@ -19,7 +19,7 @@ if ($claveIngresada == $claveSecreta) {
     $opcion = readline("Digite su opción: ");
 
     if ($opcion == "1") {
-        $consumo = file_get_contents(URL_USUARIOS);
+        $consumo = file_get_contents($URL_USUARIOS);
 
         if ($consumo === FALSE) { die("Error al consumir el servicio de usuarios."); }
         $usuarios = json_decode($consumo);
@@ -50,7 +50,7 @@ if ($claveIngresada == $claveSecreta) {
         );
 
         $data_json = json_encode($datos);
-        $proceso = curl_init(URL_USUARIOS);
+        $proceso = curl_init($URL_USUARIOS);
         curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($proceso, CURLOPT_POSTFIELDS, $data_json);
         curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
@@ -89,7 +89,7 @@ if ($claveIngresada == $claveSecreta) {
         }
 
         $data_json = json_encode($datos);
-        $url = URL_USUARIOS . '/' . $usuarioId; 
+        $url = $URL_USUARIOS . '/' . $usuarioId; 
         $proceso = curl_init($url);
 
         curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "PUT");
@@ -108,7 +108,7 @@ if ($claveIngresada == $claveSecreta) {
 
     } elseif ($opcion == "4") {
         $usuarioId = readline("Ingrese el ID del usuario que desea eliminar: ");
-        $url = URL_USUARIOS . '/' . $usuarioId;  
+        $url = $URL_USUARIOS . '/' . $usuarioId;  
 
         $proceso = curl_init($url);
         curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "DELETE");
@@ -124,7 +124,7 @@ if ($claveIngresada == $claveSecreta) {
         }
 
     } elseif ($opcion == "5") {
-        $consumo = file_get_contents(URL_ROLES);
+        $consumo = file_get_contents($URL_ROLES);
 
         if ($consumo === false) { die("Error: no se puede consumir el servicio de roles"); }
         $roles = json_decode($consumo);
@@ -137,7 +137,7 @@ if ($claveIngresada == $claveSecreta) {
         }
 
     } elseif ($opcion == "6") {
-        $consumo = file_get_contents(URL_TIPOS_DOCUMENTO);
+        $consumo = file_get_contents($URL_TIPO_DOCUMENTO);
 
         if ($consumo === FALSE) { die("Error al consumir el servicio de tipos de documento."); }
         $tiposDocumento = json_decode($consumo);
