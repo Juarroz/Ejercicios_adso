@@ -1,6 +1,6 @@
 <?php
 
-require_once 'config/urls.php';
+require_once 'Config/urls.php';
 
 $clave = "admin321";
 $claveIngreso = readline("Ingresa tu contraseña: \n");

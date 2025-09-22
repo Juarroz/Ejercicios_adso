@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../Config/url.php';
+require_once __DIR__ . '/../Config/url.php';
 
 $url =  $URL_PEDIDOS;
 
