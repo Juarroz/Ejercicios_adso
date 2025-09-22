@@ -1,5 +1,5 @@
 <?php
- $BASE_URL = "http://localhost:8080";
+ $BASE_URL = "http://localhost:8080/api";
 
 $URL_CONTACTO_FORMULARIO = $BASE_URL . "/contacto";
 
