@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Config/urls.php';
+require_once __DIR__ . '/../Config/url.php';
 
 $clave = "admin321";
 $claveIngreso = readline("Ingresa tu contraseña: \n");
@@ -25,7 +25,7 @@ if ($clave == $claveIngreso) {
 
         echo "\n--- Lista de Roles ---\n";
         foreach ($roles as $role) {
-        echo "ID: " . $role->rol_id . " - Nombre: " . $role->rolNombre . "\n";
+        echo "ID: " . $role->rolId . " - Nombre: " . $role->rolNombre . "\n";
         }
 
     } elseif ($opcion == "2") {
