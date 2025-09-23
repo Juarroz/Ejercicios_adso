@@ -28,7 +28,7 @@ if ($claveIngresada == $claveSecreta) {
 
         echo "\n--- Lista de Usuarios Actuales --- \n";
         foreach ($usuarios as $usuario) {
-            echo "ID: " . $usuario->usu_id . " - Nombre: " . $usuario->usuNombre . " (Rol: " . $usuario->rol->rolNombre . ")\n";
+            echo "ID: " . $usuario->usuId . " - Nombre: " . $usuario->usuNombre . " (Rol: " . $usuario->rol->rolNombre . ")\n";
         }
     
     } elseif ($opcion == "2") {
