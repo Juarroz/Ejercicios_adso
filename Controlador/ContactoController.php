@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../modelo/ContactoService.php';
+require_once __DIR__ . '/../Modelo/Experienciausuarios/ContactoService.php';
 
 class ContactoController {
     private $service;
@@ -54,6 +54,6 @@ class ContactoController {
 
         $contactos = $this->service->listarContactos();
 
-        require __DIR__ . '/../vista/index.php';
+        require __DIR__ . '/../vista/contacto_index.php';
     }
 }

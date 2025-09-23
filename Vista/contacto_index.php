@@ -14,8 +14,8 @@
         <ul>
             <?php foreach ($contactos as $c): ?>
                 <li>
-                    <?= htmlspecialchars($c["conNombre"] ?? '') ?> - 
-                    <?= htmlspecialchars($c["conCorreo"] ?? '') ?>
+                    <?= htmlspecialchars($c["nombre"] ?? '') ?> - 
+                    <?= htmlspecialchars($c["correo"] ?? '') ?>
                     <form method="POST" style="display:inline;">
                         <input type="hidden" name="accion" value="eliminar">
                         <input type="hidden" name="id" value="<?= $c["conId"] ?? '' ?>">
