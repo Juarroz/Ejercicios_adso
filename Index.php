@@ -1,28 +1,33 @@
 <?php
-// 1. Definimos una ruta base absoluta para evitar problemas al incluir archivos.
-define('ROOT_PATH', __DIR__);
+// index.php
 
-// 2. Leemos un parámetro 'page' de la URL para saber qué módulo cargar.
-// Si no se especifica, cargará 'contactos' o lo que definas por defecto.
-$pagina = $_GET['page'] ?? 'default'; // Puedes cambiar 'default' por 'contactos'
+// Captura la ruta amigable desde .htaccess
+$url = $_GET['url'] ?? '';
+$segmentos = explode('/', trim($url, '/'));
 
-switch ($pagina) {
-    case 'usuarios':
-        // Si la URL es ?page=usuarios, carga el controlador de usuarios.
-        require_once ROOT_PATH . '/Controlador/Sistemausuarios/UsuarioController.php';
-        $controller = new UsuarioController();
-        $controller->manejarPeticion();
+$controlador = $segmentos[0] ?? 'contacto'; // por defecto: contacto
+$accion      = $segmentos[1] ?? null;
+
+// Router simple
+switch ($controlador) {
+    case 'contacto':
+        require_once _DIR_ . '/controlador/experienciausuarios/ContactoController.php';
+        $controller = new ContactoController();
         break;
 
-    // Puedes agregar más casos para tus compañeros aquí
-    // case 'productos':
-    //     require_once ROOT_PATH . '/Controlador/Productos/ProductoController.php';
-    //     $controller = new ProductoController();
-    //     $controller->manejarPeticion();
-    //     break;
+    case 'usuario':
+        require_once _DIR_ . '/controlador/sistemausuarios/UsuarioController.php';
+        $controller = new UsuarioController();
+        break;
+
+    case 'pedido':
+        require_once _DIR_ . '/controlador/gestionpedidos/PedidoController.php';
+        $controller = new PedidoController();
+        break;
 
     default:
-        // Si no se especifica una página válida, puedes mostrar una página de inicio o un error.
-        echo "<h1>Bienvenido a la aplicación</h1><p>Selecciona un módulo para continuar.</p>";
-        break;
+        http_response_code(404);
+        die("Página no encontrada: " . htmlspecialchars($controlador));
 }
+
+$controller->manejarPeticion($accion);
