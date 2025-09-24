@@ -1,7 +1,7 @@
 <?php
 
 class ContactoService {
-    // Ajusta si tu API corre en otro puerto o ruta:
+    
     private $apiUrl = "http://localhost:8080/api/contactos";
 
     // ============ LISTAR (con filtros opcionales via/estado) ============
