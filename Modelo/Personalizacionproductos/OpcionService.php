@@ -1,5 +1,5 @@
 <?php
-require_once 'Config/url.php';
+require_once 'config/url.php';
 
 $url = $URL_OPCIONES_PERSONALIZACION;
 
