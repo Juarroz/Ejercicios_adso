@@ -17,17 +17,17 @@ $accion = $segmentos[1] ?? null;
 // -------------------------------
 switch (strtolower($controlador)) {
     case 'contacto':
-        require_once _DIR_ . '/controlador/experienciausuarios/ContactoController.php';
+        require_once __DIR__ . '/controlador/experienciausuarios/ContactoController.php';
         $controller = new ContactoController();
         break;
 
     case 'usuario':
-        require_once _DIR_ . '/controlador/sistemausuarios/UsuarioController.php';
+        require_once __DIR__ . '/controlador/sistemausuarios/UsuarioController.php';
         $controller = new UsuarioController();
         break;
 
     case 'pedido':
-        require_once _DIR_ . '/controlador/gestionpedidos/PedidoController.php';
+        require_once __DIR__ . '/controlador/gestionpedidos/PedidoController.php';
         $controller = new PedidoController();
         break;
 

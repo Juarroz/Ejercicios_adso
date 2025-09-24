@@ -1,6 +1,6 @@
 # Activa mod_rewrite
 RewriteEngine On
-RewriteBase /tu-proyecto/
+RewriteBase /Ejercicios_adso/
 
 # Redirige todo a index.php excepto archivos/directorios reales
 RewriteCond %{REQUEST_FILENAME} !-f
