@@ -1,99 +1,114 @@
 <?php
 
 class ContactoService {
+    // Ajusta si tu API corre en otro puerto o ruta:
     private $apiUrl = "http://localhost:8080/api/contactos";
 
-   
-    public function crearContacto($datos) {
+    // ============ LISTAR (con filtros opcionales via/estado) ============
+    public function listarContactos(array $filtros = []) {
+        $url = $this->apiUrl;
+
+        if (!empty($filtros)) {
+            // Solo dejamos via y estado por simplicidad (puedes agregar fechaDesde/Hasta luego)
+            $permitidos = ['via', 'estado'];
+            $query = array_intersect_key($filtros, array_flip($permitidos));
+            if (!empty($query)) {
+                $url .= '?' . http_build_query($query);
+            }
+        }
+
+        $respuesta = @file_get_contents($url);
+        if ($respuesta === false) return false;
+
+        return json_decode($respuesta, true);
+    }
+
+    // ============================ OBTENER POR ID =========================
+    public function obtenerContacto($id) {
+        $respuesta = @file_get_contents($this->apiUrl . "/" . urlencode($id));
+        if ($respuesta === false) return false;
+
+        return json_decode($respuesta, true);
+    }
+
+    // =============================== CREAR ===============================
+    public function crearContacto(array $datos) {
         $data_json = json_encode($datos);
 
-        $proceso = curl_init($this->apiUrl);
-        curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($proceso, CURLOPT_POSTFIELDS, $data_json);
-        curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($proceso, CURLOPT_HTTPHEADER, [
+        $process = curl_init($this->apiUrl);
+        curl_setopt($process, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($process, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($process, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($process, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Content-Length: ' . strlen($data_json)
         ]);
 
-        $respuesta = curl_exec($proceso);
-        $http_code = curl_getinfo($proceso, CURLINFO_HTTP_CODE);
+        $respuesta = curl_exec($process);
+        $http_code = curl_getinfo($process, CURLINFO_HTTP_CODE);
 
-        if (curl_errno($proceso)) {
-            $error = curl_error($proceso);
-            curl_close($proceso);
+        if (curl_errno($process)) {
+            $error = curl_error($process);
+            curl_close($process);
             return ["success" => false, "error" => $error];
         }
 
-        curl_close($proceso);
+        curl_close($process);
+
+        if ($http_code === 200 || $http_code === 201) {
+            return ["success" => true, "data" => json_decode($respuesta, true)];
+        }
+        return ["success" => false, "error" => "HTTP $http_code", "data" => $respuesta];
+    }
+
+    // ============================== ACTUALIZAR ===========================
+    public function actualizarContacto($id, array $datos) {
+        $data_json = json_encode($datos);
+
+        $ch = curl_init($this->apiUrl . "/" . urlencode($id));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length' => strlen($data_json)
+        ]);
+
+        $respuesta = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            return ["success" => false, "error" => $error];
+        }
+
+        curl_close($ch);
 
         if ($http_code >= 200 && $http_code < 300) {
             return ["success" => true, "data" => json_decode($respuesta, true)];
-        } else {
-            return ["success" => false, "error" => "HTTP $http_code", "data" => $respuesta];
         }
-    }
-
-   
-    public function listarContactos() {
-        $respuesta = @file_get_contents($this->apiUrl);
-        if ($respuesta === FALSE) return false;
-
-        return json_decode($respuesta, true);
-    }
-
-    
-    public function obtenerContacto($id) {
-        $respuesta = @file_get_contents($this->apiUrl . "/" . $id);
-        if ($respuesta === FALSE) return false;
-
-        return json_decode($respuesta, true);
-    }
-
-    
-    public function actualizarContacto($id, $datos) {
-        $data_json = json_encode($datos);
-        $proceso = curl_init($this->apiUrl . "/" . $id);
-
-        curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "PUT");
-        curl_setopt($proceso, CURLOPT_POSTFIELDS, $data_json);
-        curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($proceso, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($data_json)
-        ]);
-
-        $respuesta = curl_exec($proceso);
-        $http_code = curl_getinfo($proceso, CURLINFO_HTTP_CODE);
-
-        if (curl_errno($proceso)) {
-            $error = curl_error($proceso);
-            curl_close($proceso);
-            return ["success" => false, "error" => $error];
-        }
-
-        curl_close($proceso);
-
-        return $http_code >= 200 && $http_code < 300;
+        return ["success" => false, "error" => "HTTP $http_code", "data" => $respuesta];
     }
 
     
     public function eliminarContacto($id) {
-        $proceso = curl_init($this->apiUrl . "/" . $id);
-        curl_setopt($proceso, CURLOPT_CUSTOMREQUEST, "DELETE");
-        curl_setopt($proceso, CURLOPT_RETURNTRANSFER, true);
+        $ch = curl_init($this->apiUrl . "/" . urlencode($id));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-        $respuesta = curl_exec($proceso);
-        $http_code = curl_getinfo($proceso, CURLINFO_HTTP_CODE);
+        $respuesta = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        if (curl_errno($proceso)) {
-            $error = curl_error($proceso);
-            curl_close($proceso);
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
             return ["success" => false, "error" => $error];
         }
 
-        curl_close($proceso);
-
-        return $http_code >= 200 && $http_code < 300;
+        curl_close($ch);
+        return ($http_code >= 200 && $http_code < 300)
+            ? ["success" => true]
+            : ["success" => false, "error" => "HTTP $http_code", "data" => $respuesta];
     }
 }
