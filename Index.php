@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/controlador/experienciausuarios/ContactoController.php';
 
-$controller = new ContactoController();
+require_once __DIR__ . '/controlador/PedidoController.php';
+
+$controller = new PedidoController();
 $controller->manejarPeticion();
