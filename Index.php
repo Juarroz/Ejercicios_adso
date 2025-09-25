@@ -1,17 +1,25 @@
 <?php
-// index.php
+// index.php (Front Controller)
 
-// Captura la ruta amigable desde .htaccess
+// -------------------------------
+// 1. Captura de ruta amigable
+// -------------------------------
 $url = $_GET['url'] ?? '';
 $segmentos = explode('/', trim($url, '/'));
 
-$controlador = $segmentos[0] ?? 'contacto'; // por defecto: contacto
-$accion      = $segmentos[1] ?? null;
+// Prioridad: ruta limpia > query string > valor por defecto
+$controlador = $segmentos[0] 
+    ?: ($_GET['controlador'] ?? 'contacto'); 
+$accion = $segmentos[1] ?? null;
 
-// Router simple
-switch ($controlador) {
+// -------------------------------
+// 2. Router simple
+// -------------------------------
+switch (strtolower($controlador)) {
     case 'contacto':
-        require_once  __DIR__ . '/controlador/experienciausuarios/ContactoController.php';
+    
+        require_once __DIR__ . '/controlador/experienciausuarios/ContactoController.php';
+
         $controller = new ContactoController();
         break;
 
@@ -30,4 +38,7 @@ switch ($controlador) {
         die("Página no encontrada: " . htmlspecialchars($controlador));
 }
 
-$controller->manejarPeticion($accion);
+// -------------------------------
+// 3. Ejecuta el controlador
+// -------------------------------
+$controller->manejarPeticion();
