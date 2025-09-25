@@ -4,8 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Usamos la constante ROOT_PATH para una ruta segura
-require_once ROOT_PATH . '/Modelo/Sistemausuarios/UsuarioService.php';
+require_once __DIR__ . '/../../modelo/sistemausuarios/UsuarioService.php';
 
 class UsuarioController {
     private $usuarioService;
@@ -15,39 +14,39 @@ class UsuarioController {
     }
 
     public function manejarPeticion() {
-        // Inicializamos variables para la vista
-        $mensajeLogin = '';
+        // Variables que usará la vista
+        $mensajeLogin    = '';
         $mensajeRegistro = '';
-        $usuarios = [];
+        $usuarios        = [];
 
-        // Lógica de Logout
-        if (isset($_GET['accion']) && $_GET['accion'] == 'logout') {
+        // ---------- LOGOUT ----------
+        if (isset($_GET['accion']) && $_GET['accion'] === 'logout') {
             session_destroy();
             header("Location: index.php?page=usuarios");
             exit();
         }
 
-        // Lógica para procesar formularios (cuando se envían por POST)
+        // ---------- POST: login / registrar ----------
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $accion = $_POST['accion'] ?? '';
 
-            // Acción para iniciar sesión
+            // Login
             if ($accion === 'login') {
-                $resultado = $this->usuarioService->login($_POST['email'], $_POST['password']);
+                $resultado = $this->usuarioService->login($_POST['email'] ?? '', $_POST['password'] ?? '');
                 if ($resultado['success']) {
                     $_SESSION['jwt_token'] = $resultado['token'];
                 } else {
                     $mensajeLogin = "<p style='color:red;'>" . htmlspecialchars($resultado['error']) . "</p>";
                 }
-            } 
-            // Acción para registrar un usuario
+            }
+            // Registro
             elseif ($accion === 'registrar') {
                 $userData = [
-                    "nombre" => $_POST['nombre'],
-                    "correo" => $_POST['correo'],
-                    "password" => $_POST['password'],
-                    "rolId" => 2, // Por defecto, rol de usuario normal
-                    "activo" => true
+                    "nombre"   => $_POST['nombre'] ?? '',
+                    "correo"   => $_POST['correo'] ?? '',
+                    "password" => $_POST['password'] ?? '',
+                    "rolId"    => 2,   // Rol por defecto
+                    "activo"   => true
                 ];
                 $resultado = $this->usuarioService->registrarUsuario($userData);
                 if ($resultado['success']) {
@@ -58,19 +57,18 @@ class UsuarioController {
             }
         }
 
-        // Si existe un token en la sesión, obtenemos la lista de usuarios
+        // ---------- LISTAR USUARIOS (si hay sesión activa) ----------
         if (isset($_SESSION['jwt_token'])) {
             $listaUsuarios = $this->usuarioService->obtenerUsuarios($_SESSION['jwt_token']);
             if ($listaUsuarios !== false) {
                 $usuarios = $listaUsuarios;
             } else {
-                // Si el token es inválido, lo borramos y mostramos un mensaje
                 unset($_SESSION['jwt_token']);
                 $mensajeLogin = "<p style='color:red;'>Tu sesión ha expirado. Inicia sesión de nuevo.</p>";
             }
         }
-        
-        // Al final, siempre cargamos la vista y le pasamos las variables
-        require ROOT_PATH . '/Vista/Sistemausuarios/VistaUsuario.php';
+
+        // ---------- Cargar vista ----------
+        require __DIR__ . '/../../vista/sistemausuarios/VistaUsuario.php';
     }
 }
