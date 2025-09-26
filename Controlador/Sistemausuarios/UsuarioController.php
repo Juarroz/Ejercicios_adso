@@ -69,6 +69,6 @@ class UsuarioController {
         }
 
         // ---------- Cargar vista ----------
-        require __DIR__ . '/../../vista/sistemausuarios/VistaUsuario.php';
+        require __DIR__ . '/../../vista/sistemausuarios/usuario_index.php';
     }
 }

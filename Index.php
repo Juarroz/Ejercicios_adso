@@ -28,6 +28,11 @@ switch (strtolower($controlador)) {
         $controller = new UsuarioController();
         break;
 
+    case 'gestion-usuarios':
+        require_once __DIR__ . '/controlador/sistemausuarios/GestionUsuariosController.php';
+        $controller = new GestionUsuariosController();
+        break;
+
     case 'pedido':
         require_once __DIR__ . '/controlador/gestionpedidos/PedidoController.php';
         $controller = new PedidoController();
